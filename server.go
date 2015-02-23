@@ -99,7 +99,7 @@ func main() {
 		outfile.Close()
 
 		// Add to IPFS
-		cmd := exec.Command("ipfs", "add", filepath)
+		cmd := exec.Command("ipfs", "add", outfilepath)
 		output, err := cmd.CombinedOutput()
 		if err != nil {
 			log.Fatal(err)
