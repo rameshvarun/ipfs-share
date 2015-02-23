@@ -6,6 +6,45 @@
 		<!-- Bootstrap -->
 		<link rel="stylesheet" href="http://gateway.ipfs.io/ipfs/QmWRB3DFBbuGKwUrjXznkfNoawtSojCcGCeZHcLFePGuRb/css/bootstrap.min.css">
 		<script src="http://gateway.ipfs.io/ipfs/QmWRB3DFBbuGKwUrjXznkfNoawtSojCcGCeZHcLFePGuRb/js/bootstrap.min.js"></script>
+
+		<!-- SweetAlert -->
+		<script src="http://gateway.ipfs.io/ipfs/Qmb4ZkY3UXEBRArhTzdH36hftRSc71ojEtPuC5rtW4fTgW/sweet-alert.min.js"></script> <link rel="stylesheet" type="text/css" href="http://gateway.ipfs.io/ipfs/Qmb4ZkY3UXEBRArhTzdH36hftRSc71ojEtPuC5rtW4fTgW/sweet-alert.css">
+
+		<script src="app.js"></script>
 	</head>
-	<body></body>
+	<body>
+		<div class="container">
+			<div role="tabpanel">
+				<ul class="nav nav-tabs" role="tablist">
+					<li role="presentation" class="active"><a href="#pastebin" aria-controls="pastebin" role="tab" data-toggle="tab">Pastebin</a></li>
+					<li role="presentation"><a href="#image" aria-controls="image" role="tab" data-toggle="tab">Image Paste</a></li>
+	    <li role="presentation"><a href="#file" aria-controls="file" role="tab" data-toggle="tab">File Upload</a></li>
+				</ul>
+
+				<div class="tab-content">
+					<div role="tabpanel" class="tab-pane active" id="pastebin">
+						<form id="pastebin-form">
+							
+							
+							<label for="content">File Content</label>
+							<textarea class="form-control" id="pastebin-content" name="pastebin-content"></textarea>
+
+							<input type="submit" class="btn btn-default" />
+
+							<!--
+							<label for="filename">File Name</label>
+							<input type="text" class="form-control" id="filename" placeholder="example.txt">-->
+
+							<!-- TODO: Allow for password based Encryption -->
+						</form>
+					</div>
+					<div role="tabpanel" class="tab-pane active" id="image">
+					<div role="tabpanel" class="tab-pane active" id="file">
+					</div>
+				</div>
+			</div>
+
+			
+		</div>
+	</body>
 </html>
