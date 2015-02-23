@@ -1,14 +1,19 @@
 <html>
 	<head>
 		<!-- JQuery -->
-		<script src="http://gateway.ipfs.io/ipfs/QmfPThdCLjxEcxMsNWGndbNSMhsEaENSUQo9TXyUmKLA8B"></script>
+		<script src="http://ipfs.varunramesh.net/ipfs/QmfPThdCLjxEcxMsNWGndbNSMhsEaENSUQo9TXyUmKLA8B"></script>
 
 		<!-- Bootstrap -->
-		<link rel="stylesheet" href="http://gateway.ipfs.io/ipfs/QmWRB3DFBbuGKwUrjXznkfNoawtSojCcGCeZHcLFePGuRb/css/bootstrap.min.css">
-		<script src="http://gateway.ipfs.io/ipfs/QmWRB3DFBbuGKwUrjXznkfNoawtSojCcGCeZHcLFePGuRb/js/bootstrap.min.js"></script>
+		<link rel="stylesheet" href="http://ipfs.varunramesh.net/ipfs/QmWRB3DFBbuGKwUrjXznkfNoawtSojCcGCeZHcLFePGuRb/css/bootstrap.min.css">
+		<script src="http://ipfs.varunramesh.net/ipfs/QmWRB3DFBbuGKwUrjXznkfNoawtSojCcGCeZHcLFePGuRb/js/bootstrap.min.js"></script>
 
 		<!-- SweetAlert -->
-		<script src="http://gateway.ipfs.io/ipfs/Qmb4ZkY3UXEBRArhTzdH36hftRSc71ojEtPuC5rtW4fTgW/sweet-alert.min.js"></script> <link rel="stylesheet" type="text/css" href="http://gateway.ipfs.io/ipfs/Qmb4ZkY3UXEBRArhTzdH36hftRSc71ojEtPuC5rtW4fTgW/sweet-alert.css">
+		<script src="http://ipfs.varunramesh.net/ipfs/Qmb4ZkY3UXEBRArhTzdH36hftRSc71ojEtPuC5rtW4fTgW/sweet-alert.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="http://ipfs.varunramesh.net/ipfs/Qmb4ZkY3UXEBRArhTzdH36hftRSc71ojEtPuC5rtW4fTgW/sweet-alert.css">
+
+		<!-- Dropzone -->
+		<link rel="stylesheet" type="text/css" href="http://ipfs.varunramesh.net/ipfs/QmXF6WWUpfE6SNNd7qk3ySbcxSTDLrcrw3UGXQ9oCS4yCT">
+		<script src="http://ipfs.varunramesh.net/ipfs/QmNZgjcwVpddVornN7DgvNtzehHbqwPczmHnnuUQbPiLHV"></script>
 
 		<script src="app.js"></script>
 	</head>
@@ -18,7 +23,7 @@
 				<ul class="nav nav-tabs" role="tablist">
 					<li role="presentation" class="active"><a href="#pastebin" aria-controls="pastebin" role="tab" data-toggle="tab">Pastebin</a></li>
 					<li role="presentation"><a href="#image" aria-controls="image" role="tab" data-toggle="tab">Image Paste</a></li>
-	    <li role="presentation"><a href="#file" aria-controls="file" role="tab" data-toggle="tab">File Upload</a></li>
+	    			<li role="presentation"><a href="#fileupload" aria-controls="fileupload" role="tab" data-toggle="tab">File Upload</a></li>
 				</ul>
 
 				<div class="tab-content">
@@ -38,8 +43,9 @@
 							<!-- TODO: Allow for password based Encryption -->
 						</form>
 					</div>
-					<div role="tabpanel" class="tab-pane active" id="image">
-					<div role="tabpanel" class="tab-pane active" id="file">
+					<div role="tabpanel" class="tab-pane" id="image"></div>
+					<div role="tabpanel" class="tab-pane" id="fileupload">
+						<form action="/upload" class="dropzone" id="dropzone"></form>
 					</div>
 				</div>
 			</div>
