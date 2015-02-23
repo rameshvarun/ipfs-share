@@ -1,3 +1,11 @@
+Dropzone.options.dropzone = {
+	init: function() {
+		this.on("success", function(file, response) {
+			window.open(response.url, '_blank')
+		});
+	}
+}
+
 $(function() {
 	$("#pastebin-form").submit(function(e) {
 		e.preventDefault();
