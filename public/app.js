@@ -29,3 +29,23 @@ $(function() {
 		
 	})
 })
+
+$("html").pasteImageReader(function(results) {
+	var dataURL, filename;
+ 	filename = results.filename, dataURL = results.dataURL;
+
+	$.ajax({
+		type: "POST",
+		dataType: "json",
+		data: {
+			dataurl : dataURL
+		},
+		url: "/image",
+		success: function(data) {
+			window.open(data.url, '_blank')
+		},
+		error : function(jqXHR, status, message) {
+			sweetAlert(status, message, "error");
+		}
+	});
+});

@@ -17,10 +17,15 @@ import (
 	"github.com/codegangsta/martini-contrib/render"
 	"github.com/boltdb/bolt"
 	"github.com/martini-contrib/binding"
+	"github.com/vincent-petithory/dataurl"
 )
 
 type Paste struct {
     Content            string  `form:"content" binding:"required"`
+}
+
+type Image struct {
+    DataURL           string  `form:"dataurl" binding:"required"`
 }
 
 type UploadFile struct {
@@ -71,6 +76,39 @@ func main() {
 			log.Fatal(err)
 		}
 		f.WriteString(paste.Content)
+		f.Close()
+
+		// Add this file to IPFS
+		cmd := exec.Command("ipfs", "add", filepath)
+		output, err := cmd.Output()
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		// Create a share URL and return
+		words := strings.Split(string(output[:]), " ")
+		hash := words[1]
+		url := *gatewayURL + "/ipfs/" + hash
+		response := map[string]interface{}{ "url": url }
+		r.JSON(200, response)
+	})
+
+	m.Post("/image", binding.Form(Image{}), func(image Image, ferr binding.Errors, r render.Render) {
+		// Parse Data URL
+		dataURL, err := dataurl.DecodeString(image.DataURL)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		// Write content to a file
+		filename := time.Now().Format(time.UnixDate)
+		filepath := path.Join("files","images", filename)
+
+		f, err := os.Create(filepath)
+		if err != nil {
+			log.Fatal(err)
+		}
+		f.Write(dataURL.Data)
 		f.Close()
 
 		// Add this file to IPFS

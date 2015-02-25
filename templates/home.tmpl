@@ -15,6 +15,9 @@
 		<link rel="stylesheet" type="text/css" href="{{ .Gateway }}/ipfs/QmXF6WWUpfE6SNNd7qk3ySbcxSTDLrcrw3UGXQ9oCS4yCT">
 		<script src="{{ .Gateway }}/ipfs/QmNZgjcwVpddVornN7DgvNtzehHbqwPczmHnnuUQbPiLHV"></script>
 
+		<!-- JQuery Paste Image Reader -->
+		<script src="{{ .Gateway }}/ipfs/QmR2JcvYKFgUj6me9HDxS1G9Qazma2Mwsg1rsuyYGTokHm"></script>
+
 		<script src="app.js"></script>
 	</head>
 	<body>
@@ -22,7 +25,6 @@
 			<div role="tabpanel">
 				<ul class="nav nav-tabs" role="tablist">
 					<li role="presentation" class="active"><a href="#pastebin" aria-controls="pastebin" role="tab" data-toggle="tab">Pastebin</a></li>
-					<li role="presentation"><a href="#image" aria-controls="image" role="tab" data-toggle="tab">Image Paste</a></li>
 	    			<li role="presentation"><a href="#fileupload" aria-controls="fileupload" role="tab" data-toggle="tab">File Upload</a></li>
 				</ul>
 
@@ -43,14 +45,14 @@
 							<!-- TODO: Allow for password based Encryption -->
 						</form>
 					</div>
-					<div role="tabpanel" class="tab-pane" id="image"></div>
 					<div role="tabpanel" class="tab-pane" id="fileupload">
 						<form action="/upload" class="dropzone" id="dropzone"></form>
 					</div>
 				</div>
 			</div>
 
-			
+			<hr>
+			Or, Paste an Image anywhere on the page!
 		</div>
 	</body>
 </html>
