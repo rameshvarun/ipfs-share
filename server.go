@@ -12,6 +12,8 @@ import (
 	"mime/multipart"
 	"io"
 	"net/http"
+	"crypto/md5"
+	"encoding/hex"
 
 	"github.com/go-martini/martini"
 	"github.com/codegangsta/martini-contrib/render"
@@ -127,14 +129,23 @@ func main() {
 	})
 
 	m.Post("/upload", func(req *http.Request, r render.Render) {
+		// Load file information from the form data
 		infile, header, err := req.FormFile("file")
 		if err != nil {
 			log.Fatal(err)
 		}
 		defer infile.Close()
 
+		// Create a directory to put this file in
+		hasher := md5.New()
+		io.WriteString(hasher, header.Filename)
+		dirname := hex.EncodeToString(hasher.Sum(nil))[:5]
+		if err := os.MkdirAll(path.Join("files","other", dirname), 0755); err != nil {
+			log.Fatal(err)
+		}
+
 		outfilename := header.Filename
-		outfilepath := path.Join("files","other", outfilename)
+		outfilepath := path.Join("files","other", dirname, outfilename)
 
 		outfile, err := os.Create(outfilepath)
 		if err != nil {
@@ -146,16 +157,18 @@ func main() {
 		outfile.Close()
 
 		// Add to IPFS
-		cmd := exec.Command("ipfs", "add", outfilepath)
+		cmd := exec.Command("ipfs", "add", "-r", path.Join("files","other", dirname))
 		output, err := cmd.Output()
+		log.Println(string(output))
 		if err != nil {
 			log.Fatal(err)
 		}
 
 		// Create a File URL and return
-		words := strings.Split(string(output[:]), " ")
+		lines := strings.Split(string(output[:]), "\n")
+		words := strings.Split(lines[len(lines) - 2], " ")
 		hash := words[1]
-		url := *gatewayURL + "/ipfs/" + hash
+		url := *gatewayURL + "/ipfs/" + hash + "/" + outfilename
 		response := map[string]interface{}{ "url": url }
 		r.JSON(200, response)
 	})
