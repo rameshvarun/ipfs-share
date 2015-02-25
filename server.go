@@ -52,6 +52,15 @@ func main() {
 
 	m := martini.Classic()
 	m.Use(render.Renderer())
+
+	m.Get("/", func(r render.Render) {
+		r.HTML(200, "home", struct {
+			Gateway string
+		}{
+			*gatewayURL,
+		})
+	})
+
 	m.Post("/paste", binding.Form(Paste{}), func(paste Paste, ferr binding.Errors, r render.Render) {
 		// Write content to a file
 		filename := time.Now().Format(time.UnixDate) + ".txt"
