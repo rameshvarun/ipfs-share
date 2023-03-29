@@ -1,58 +1,81 @@
 <html>
-	<head>
-		<!-- JQuery v1.11.2 -->
-		<script src="{{ .Gateway }}/ipfs/QmfPThdCLjxEcxMsNWGndbNSMhsEaENSUQo9TXyUmKLA8B"></script>
+  <head>
+    <!-- JQuery v1.11.2 -->
+    <script src="{{ .Gateway }}/ipfs/QmfPThdCLjxEcxMsNWGndbNSMhsEaENSUQo9TXyUmKLA8B"></script>
 
-		<!-- Bootstrap v3.3.2 -->
-		<link rel="stylesheet" href="{{ .Gateway }}/ipfs/QmWRB3DFBbuGKwUrjXznkfNoawtSojCcGCeZHcLFePGuRb/css/bootstrap.min.css">
-		<script src="{{ .Gateway }}/ipfs/QmWRB3DFBbuGKwUrjXznkfNoawtSojCcGCeZHcLFePGuRb/js/bootstrap.min.js"></script>
+    <!-- Bootstrap v3.3.2 -->
+    <link
+      rel="stylesheet"
+      href="{{ .Gateway }}/ipfs/QmWRB3DFBbuGKwUrjXznkfNoawtSojCcGCeZHcLFePGuRb/css/bootstrap.min.css"
+    />
+    <script src="{{ .Gateway }}/ipfs/QmWRB3DFBbuGKwUrjXznkfNoawtSojCcGCeZHcLFePGuRb/js/bootstrap.min.js"></script>
 
-		<!-- SweetAlert v0.5.0 -->
-		<script src="{{ .Gateway }}/ipfs/QmTPVCKv84KwYzUSERtgNuYfFuuy91UsiHGeia4hMD2chP/sweet-alert.min.js"></script>
-		<link rel="stylesheet" type="text/css" href="{{ .Gateway }}/ipfs/QmTPVCKv84KwYzUSERtgNuYfFuuy91UsiHGeia4hMD2chP/sweet-alert.css">
+    <!-- SweetAlert v0.5.0 -->
+    <script src="{{ .Gateway }}/ipfs/QmTPVCKv84KwYzUSERtgNuYfFuuy91UsiHGeia4hMD2chP/sweet-alert.min.js"></script>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ .Gateway }}/ipfs/QmTPVCKv84KwYzUSERtgNuYfFuuy91UsiHGeia4hMD2chP/sweet-alert.css"
+    />
 
-		<!-- Dropzone v1.3.12 -->
-		<link rel="stylesheet" type="text/css" href="{{ .Gateway }}/ipfs/QmR7TbDrjmnh8BWaQEiCWJvPdeMmSa9Yh4e7hNNmHv2r9B/css/dropzone.css">
-		<script src="{{ .Gateway }}/ipfs/QmR7TbDrjmnh8BWaQEiCWJvPdeMmSa9Yh4e7hNNmHv2r9B/dropzone.js"></script>
+    <!-- Dropzone v1.3.12 -->
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ .Gateway }}/ipfs/QmR7TbDrjmnh8BWaQEiCWJvPdeMmSa9Yh4e7hNNmHv2r9B/css/dropzone.css"
+    />
+    <script src="{{ .Gateway }}/ipfs/QmR7TbDrjmnh8BWaQEiCWJvPdeMmSa9Yh4e7hNNmHv2r9B/dropzone.js"></script>
 
-		<!-- JQuery Paste Image Reader -->
-		<script src="{{ .Gateway }}/ipfs/QmZo7RivQAq8QXx3remLaFa4YhPhcSCMz7i84EkmB39doa"></script>
+    <!-- JQuery Paste Image Reader -->
+    <script src="{{ .Gateway }}/ipfs/QmZo7RivQAq8QXx3remLaFa4YhPhcSCMz7i84EkmB39doa"></script>
 
-		<script src="app.js"></script>
-	</head>
-	<body>
-		<div class="container">
-			<div role="tabpanel">
-				<ul class="nav nav-tabs" role="tablist">
-					<li role="presentation" class="active"><a href="#pastebin" aria-controls="pastebin" role="tab" data-toggle="tab">Pastebin</a></li>
-	    			<li role="presentation"><a href="#fileupload" aria-controls="fileupload" role="tab" data-toggle="tab">File Upload</a></li>
-				</ul>
+    <script src="app.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div role="tabpanel">
+        <ul class="nav nav-tabs" role="tablist">
+          <li role="presentation" class="active">
+            <a
+              href="#pastebin"
+              aria-controls="pastebin"
+              role="tab"
+              data-toggle="tab"
+              >Pastebin</a
+            >
+          </li>
+          <li role="presentation">
+            <a
+              href="#fileupload"
+              aria-controls="fileupload"
+              role="tab"
+              data-toggle="tab"
+              >File Upload</a
+            >
+          </li>
+        </ul>
 
-				<div class="tab-content">
-					<div role="tabpanel" class="tab-pane active" id="pastebin">
-						<form id="pastebin-form">
-							
-							
-							<label for="content">File Content</label>
-							<textarea class="form-control" id="pastebin-content" name="pastebin-content"></textarea>
+        <div class="tab-content">
+          <div role="tabpanel" class="tab-pane active" id="pastebin">
+            <form id="pastebin-form">
+              <label for="content">File Content</label>
+              <textarea
+                class="form-control"
+                id="pastebin-content"
+                name="pastebin-content"
+              ></textarea>
 
-							<input type="submit" class="btn btn-default" />
+              <input type="submit" class="btn btn-default" />
+            </form>
+          </div>
+          <div role="tabpanel" class="tab-pane" id="fileupload">
+            <form action="/upload" class="dropzone" id="dropzone"></form>
+          </div>
+        </div>
+      </div>
 
-							<!--
-							<label for="filename">File Name</label>
-							<input type="text" class="form-control" id="filename" placeholder="example.txt">-->
-
-							<!-- TODO: Allow for password based Encryption -->
-						</form>
-					</div>
-					<div role="tabpanel" class="tab-pane" id="fileupload">
-						<form action="/upload" class="dropzone" id="dropzone"></form>
-					</div>
-				</div>
-			</div>
-
-			<hr>
-			Or, Paste an Image anywhere on the page!
-		</div>
-	</body>
+      <hr />
+      Or, Paste an Image anywhere on the page!
+    </div>
+  </body>
 </html>
