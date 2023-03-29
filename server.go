@@ -15,7 +15,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/boltdb/bolt"
 	"github.com/codegangsta/martini-contrib/render"
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/binding"
@@ -50,12 +49,6 @@ func main() {
 	port := flag.Int("port", 3000, "The port number to run the server on.")
 	hostname := flag.String("hostname", "0.0.0.0", "The hostname to run under.")
 	flag.Parse()
-
-	db, err := bolt.Open("blog.db", 0600, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
 
 	m := martini.Classic()
 	m.Use(render.Renderer())
