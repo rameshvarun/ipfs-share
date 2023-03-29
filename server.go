@@ -45,7 +45,8 @@ func main() {
 		log.Fatal(err)
 	}
 
-	gatewayURL := flag.String("gateway", "https://gateway.ipfs.io", "The HTTP gateway used in shared file links.")
+	// Parse command-line flags.
+	gatewayURL := flag.String("gateway", "https://ipfs.io", "The HTTP gateway used in shared file links.")
 	port := flag.Int("port", 3000, "The port number to run the server on.")
 	hostname := flag.String("hostname", "0.0.0.0", "The hostname to run under.")
 	flag.Parse()
