@@ -1,11 +1,9 @@
 package main
 
 import (
-	"crypto/md5"
-	"encoding/hex"
+	"bytes"
 	"flag"
 	"fmt"
-	"io"
 	"log"
 	"mime/multipart"
 	"net/http"
@@ -123,35 +121,24 @@ func main() {
 	})
 
 	m.Post("/upload", func(req *http.Request, r render.Render) {
-		// Load file information from the form data
+		// Load file information from the form data.
 		infile, header, err := req.FormFile("file")
 		if err != nil {
 			log.Fatal(err)
 		}
 		defer infile.Close()
 
-		// Create a directory to put this file in
-		hasher := md5.New()
-		io.WriteString(hasher, header.Filename)
-		dirname := hex.EncodeToString(hasher.Sum(nil))[:5]
-		if err := os.MkdirAll(path.Join("files", "other", dirname), 0755); err != nil {
-			log.Fatal(err)
-		}
-
-		outfilename := header.Filename
-		outfilepath := path.Join("files", "other", dirname, outfilename)
-
-		outfile, err := os.Create(outfilepath)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		log.Println("Piping upload into disk file.")
-		io.Copy(outfile, infile)
-		outfile.Close()
+		// Read file content into buffer.
+		log.Println("Reading file content into buffer...")
+		buf := new(bytes.Buffer)
+		buf.ReadFrom(infile)
 
 		// Add to IPFS
-		cmd := exec.Command("ipfs", "add", "-r", path.Join("files", "other", dirname))
+		log.Println("Adding file to IPFS...")
+		cmd := exec.Command("ipfs", "add")
+		cmd.Stdin = buf
+
+		// Read and parse output from IPFS command.
 		output, err := cmd.Output()
 		log.Println(string(output))
 		if err != nil {
@@ -159,10 +146,11 @@ func main() {
 		}
 
 		// Create a File URL and return
+		log.Println("Returning result...")
 		lines := strings.Split(string(output[:]), "\n")
 		words := strings.Split(lines[len(lines)-2], " ")
 		hash := words[1]
-		url := *gatewayURL + "/ipfs/" + hash + "/" + outfilename
+		url := *gatewayURL + "/ipfs/" + hash + "/?filename=" + header.Filename
 		response := map[string]interface{}{"url": url}
 		r.JSON(200, response)
 	})
