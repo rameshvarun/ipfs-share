@@ -5,13 +5,13 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"mime"
 	"mime/multipart"
 	"net/http"
 	"os"
 	"os/exec"
 	"path"
 	"strings"
-	"time"
 
 	"github.com/codegangsta/martini-contrib/render"
 	"github.com/go-martini/martini"
@@ -29,6 +29,27 @@ type Image struct {
 
 type UploadFile struct {
 	File *multipart.FileHeader `form:"file" binding:"required"`
+}
+
+// Add the given buffer as a file to IPFS, returning it's hash.
+func AddToIPFS(buf *bytes.Buffer) (string, error) {
+	log.Println("Adding file to IPFS...")
+
+	// Pipe buffer as STDIN to "ipfs add"
+	cmd := exec.Command("ipfs", "add")
+	cmd.Stdin = buf
+
+	// Read and parse output from IPFS command.
+	output, err := cmd.Output()
+	if err != nil {
+		return "", err
+	}
+	lines := strings.Split(string(output[:]), "\n")
+	words := strings.Split(lines[len(lines)-2], " ")
+
+	// Return file hash.
+	hash := words[1]
+	return hash, nil
 }
 
 func main() {
@@ -61,28 +82,18 @@ func main() {
 	})
 
 	m.Post("/paste", binding.Form(Paste{}), func(paste Paste, ferr binding.Errors, r render.Render) {
-		// Write content to a file
-		filename := time.Now().Format(time.UnixDate) + ".txt"
-		filepath := path.Join("files", "text", filename)
+		// Load paste content into a buffer.
+		buf := new(bytes.Buffer)
+		buf.WriteString(paste.Content)
 
-		f, err := os.Create(filepath)
-		if err != nil {
-			log.Fatal(err)
-		}
-		f.WriteString(paste.Content)
-		f.Close()
-
-		// Add this file to IPFS
-		cmd := exec.Command("ipfs", "add", filepath)
-		output, err := cmd.Output()
+		// Add buffer to IPFS
+		hash, err := AddToIPFS(buf)
 		if err != nil {
 			log.Fatal(err)
 		}
 
 		// Create a share URL and return
-		words := strings.Split(string(output[:]), " ")
-		hash := words[1]
-		url := *gatewayURL + "/ipfs/" + hash
+		url := *gatewayURL + "/ipfs/" + hash + "/?filename=paste.txt"
 		response := map[string]interface{}{"url": url}
 		r.JSON(200, response)
 	})
@@ -94,28 +105,26 @@ func main() {
 			log.Fatal(err)
 		}
 
+		// Try to determine appropriate file extension.
+		exts, err := mime.ExtensionsByType(dataURL.ContentType())
+		fmt.Println(exts)
+		ext := ""
+		if err == nil && exts != nil && len(exts) > 0 {
+			ext = exts[0]
+		}
+
+		// Load paste content into a buffer.
+		buf := new(bytes.Buffer)
+		buf.Write(dataURL.Data)
+
 		// Write content to a file
-		filename := time.Now().Format(time.UnixDate)
-		filepath := path.Join("files", "images", filename)
-
-		f, err := os.Create(filepath)
-		if err != nil {
-			log.Fatal(err)
-		}
-		f.Write(dataURL.Data)
-		f.Close()
-
-		// Add this file to IPFS
-		cmd := exec.Command("ipfs", "add", filepath)
-		output, err := cmd.Output()
-		if err != nil {
-			log.Fatal(err)
-		}
+		hash, err := AddToIPFS(buf)
 
 		// Create a share URL and return
-		words := strings.Split(string(output[:]), " ")
-		hash := words[1]
 		url := *gatewayURL + "/ipfs/" + hash
+		if ext != "" {
+			url += "?filename=paste" + ext
+		}
 		response := map[string]interface{}{"url": url}
 		r.JSON(200, response)
 	})
@@ -134,22 +143,12 @@ func main() {
 		buf.ReadFrom(infile)
 
 		// Add to IPFS
-		log.Println("Adding file to IPFS...")
-		cmd := exec.Command("ipfs", "add")
-		cmd.Stdin = buf
-
-		// Read and parse output from IPFS command.
-		output, err := cmd.Output()
-		log.Println(string(output))
+		hash, err := AddToIPFS(buf)
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		// Create a File URL and return
-		log.Println("Returning result...")
-		lines := strings.Split(string(output[:]), "\n")
-		words := strings.Split(lines[len(lines)-2], " ")
-		hash := words[1]
+		// Return the URL of the added file.
 		url := *gatewayURL + "/ipfs/" + hash + "/?filename=" + header.Filename
 		response := map[string]interface{}{"url": url}
 		r.JSON(200, response)
