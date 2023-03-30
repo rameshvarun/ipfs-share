@@ -1,5 +1,5 @@
 # IPFS Share
-An example IPFS-backed Pastebin / Image Host / File Sharing application.
+An example IPFS-powered Pastebin / Image Host / File Sharing application.
 
 <p align="center">
 <img src="./demo.png"/>
