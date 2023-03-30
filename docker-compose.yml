@@ -1,0 +1,18 @@
+version: "3.9"
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    command:
+      /bin/sh -c "mkdir -p ~/.ipfs && echo '/dns4/kubo/tcp/5001' > ~/.ipfs/api && app"
+  kubo:
+    image: "ipfs/kubo:master-2023-03-29-9fb09dd"
+    volumes:
+      - ipfs_staging:/export
+      - ipfs_data:/data/ipfs
+    expose:
+      - "5001"
+volumes:
+  ipfs_staging:
+  ipfs_data:

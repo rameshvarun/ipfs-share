@@ -8,9 +8,7 @@ import (
 	"mime"
 	"mime/multipart"
 	"net/http"
-	"os"
 	"os/exec"
-	"path"
 	"strings"
 
 	"github.com/codegangsta/martini-contrib/render"
@@ -53,17 +51,6 @@ func AddToIPFS(buf *bytes.Buffer) (string, error) {
 }
 
 func main() {
-	// Create content storage directories
-	if err := os.MkdirAll(path.Join("files", "text"), 0755); err != nil {
-		log.Fatal(err)
-	}
-	if err := os.MkdirAll(path.Join("files", "images"), 0755); err != nil {
-		log.Fatal(err)
-	}
-	if err := os.MkdirAll(path.Join("files", "other"), 0755); err != nil {
-		log.Fatal(err)
-	}
-
 	// Parse command-line flags.
 	gatewayURL := flag.String("gateway", "https://ipfs.io", "The HTTP gateway used in shared file links.")
 	port := flag.Int("port", 3000, "The port number to run the server on.")
