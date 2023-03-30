@@ -8,13 +8,13 @@ import (
 	"mime"
 	"mime/multipart"
 	"net/http"
-	"os/exec"
-	"strings"
 
 	"github.com/codegangsta/martini-contrib/render"
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/binding"
 	"github.com/vincent-petithory/dataurl"
+
+	ipfs "github.com/ipfs/go-ipfs-api"
 )
 
 type Paste struct {
@@ -29,33 +29,18 @@ type UploadFile struct {
 	File *multipart.FileHeader `form:"file" binding:"required"`
 }
 
-// Add the given buffer as a file to IPFS, returning it's hash.
-func AddToIPFS(buf *bytes.Buffer) (string, error) {
-	log.Println("Adding file to IPFS...")
-
-	// Pipe buffer as STDIN to "ipfs add"
-	cmd := exec.Command("ipfs", "add")
-	cmd.Stdin = buf
-
-	// Read and parse output from IPFS command.
-	output, err := cmd.Output()
-	if err != nil {
-		return "", err
-	}
-	lines := strings.Split(string(output[:]), "\n")
-	words := strings.Split(lines[len(lines)-2], " ")
-
-	// Return file hash.
-	hash := words[1]
-	return hash, nil
-}
+var shell *ipfs.Shell
 
 func main() {
 	// Parse command-line flags.
 	gatewayURL := flag.String("gateway", "https://ipfs.io", "The HTTP gateway used in shared file links.")
 	port := flag.Int("port", 3000, "The port number to run the server on.")
 	hostname := flag.String("hostname", "0.0.0.0", "The hostname to run under.")
+	daemon := flag.String("daemon", "/ip4/127.0.0.1/tcp/5001", "The address of the Daemon API,")
 	flag.Parse()
+
+	// Connect to the IPFS daemon.
+	shell = ipfs.NewShell(*daemon)
 
 	m := martini.Classic()
 	m.Use(render.Renderer())
@@ -74,7 +59,7 @@ func main() {
 		buf.WriteString(paste.Content)
 
 		// Add buffer to IPFS
-		hash, err := AddToIPFS(buf)
+		hash, err := shell.Add(buf)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -105,7 +90,7 @@ func main() {
 		buf.Write(dataURL.Data)
 
 		// Write content to a file
-		hash, err := AddToIPFS(buf)
+		hash, err := shell.Add(buf)
 
 		// Create a share URL and return
 		url := *gatewayURL + "/ipfs/" + hash
@@ -130,7 +115,7 @@ func main() {
 		buf.ReadFrom(infile)
 
 		// Add to IPFS
-		hash, err := AddToIPFS(buf)
+		hash, err := shell.Add(buf)
 		if err != nil {
 			log.Fatal(err)
 		}

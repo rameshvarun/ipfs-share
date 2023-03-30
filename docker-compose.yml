@@ -5,7 +5,7 @@ services:
     ports:
       - "3000:3000"
     command:
-      /bin/sh -c "mkdir -p ~/.ipfs && echo '/dns4/kubo/tcp/5001' > ~/.ipfs/api && app"
+      /bin/sh -c "app --daemon /dns4/kubo/tcp/5001"
   kubo:
     image: "ipfs/kubo:master-2023-03-29-9fb09dd"
     volumes:

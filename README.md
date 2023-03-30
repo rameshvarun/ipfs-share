@@ -21,7 +21,6 @@ You can now visit the application at `http://localhost:3000/`.
 
 To run outside of a Docker container, you need a few prequisites.
 - A version of [Go](https://go.dev/doc/install)
-- The [IPFS CLI](https://docs.ipfs.tech/install/command-line/)
 - A running IPFS daemon.
     - The [IPFS Desktop app](https://docs.ipfs.tech/install/ipfs-desktop/) provides one while it is running.
     - Otherwise you can run `ipfs daemon` to run one from the CLI.
