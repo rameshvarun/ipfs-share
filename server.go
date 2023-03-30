@@ -43,7 +43,9 @@ func main() {
 	shell = ipfs.NewShell(*daemon)
 
 	m := martini.Classic()
-	m.Use(render.Renderer())
+	m.Use(render.Renderer(render.Options{
+		Extensions: []string{".html"},
+	}))
 
 	m.Get("/", func(r render.Render) {
 		r.HTML(200, "home", struct {
