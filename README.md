@@ -8,7 +8,7 @@ An example IPFS-powered Pastebin / Image Host / File Sharing application.
 
 ## Instructions (Docker)
 
-The easist way to start the application is using Docker compose.
+The easiest way to start the application is using Docker compose.
 
 ```
 git clone https://github.com/rameshvarun/ipfs-share.git
