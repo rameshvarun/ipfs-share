@@ -10,7 +10,7 @@ An example IPFS-powered Pastebin / Image Host / File Sharing application.
 
 The easiest way to start the application is using Docker compose.
 
-```
+```bash
 git clone https://github.com/rameshvarun/ipfs-share.git
 cd ipfs-share && docker compose up
 ```
@@ -25,7 +25,7 @@ To run outside of a Docker container, you need a few prequisites.
     - The [IPFS Desktop app](https://docs.ipfs.tech/install/ipfs-desktop/) provides one while it is running.
     - Otherwise you can run `ipfs daemon` to run one from the CLI.
 
-```
+```bash
 go get github.com/rameshvarun/ipfs-share
 cd ~/go/src/github.com/rameshvarun/ipfs-share
 go run server.go
