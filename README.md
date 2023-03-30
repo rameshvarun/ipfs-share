@@ -1,7 +1,9 @@
 # IPFS Share
 An example IPFS-backed Pastebin / Image Host / File Sharing application.
 
-![Imgur](https://i.imgur.com/u7nqYtc.png)
+<p align="center">
+<img src="./demo.png"/>
+</p>
 
 
 ## Instructions (Docker)
