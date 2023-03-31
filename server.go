@@ -5,7 +5,6 @@ import (
 	"flag"
 	"fmt"
 	"log"
-	"mime"
 	"mime/multipart"
 	"net/http"
 
@@ -22,7 +21,8 @@ type Paste struct {
 }
 
 type Image struct {
-	DataURL string `form:"dataurl" binding:"required"`
+	DataURL  string `form:"dataurl" binding:"required"`
+	FileName string `form:"filename" binding:"required"`
 }
 
 type UploadFile struct {
@@ -79,14 +79,6 @@ func main() {
 			log.Fatal(err)
 		}
 
-		// Try to determine appropriate file extension.
-		exts, err := mime.ExtensionsByType(dataURL.ContentType())
-		fmt.Println(exts)
-		ext := ""
-		if err == nil && exts != nil && len(exts) > 0 {
-			ext = exts[0]
-		}
-
 		// Load paste content into a buffer.
 		buf := new(bytes.Buffer)
 		buf.Write(dataURL.Data)
@@ -95,10 +87,7 @@ func main() {
 		hash, err := shell.Add(buf)
 
 		// Create a share URL and return
-		url := *gatewayURL + "/ipfs/" + hash
-		if ext != "" {
-			url += "?filename=paste" + ext
-		}
+		url := *gatewayURL + "/ipfs/" + hash + "?filename=" + image.FileName
 		response := map[string]interface{}{"url": url}
 		r.JSON(200, response)
 	})
