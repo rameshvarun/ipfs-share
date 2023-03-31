@@ -7,9 +7,7 @@ COPY go.mod go.sum ./
 RUN go mod download && go mod verify
 
 # Build application source.
-COPY server.go .
-COPY public/ ./public
-COPY templates ./templates
+COPY server.go index.html ./
 RUN go build -v -o /usr/local/bin/app ./...
 
 # Run application.
