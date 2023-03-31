@@ -45,14 +45,11 @@ func main() {
 	m := martini.Classic()
 	m.Use(render.Renderer(render.Options{
 		Extensions: []string{".html"},
+		Directory:  ".",
 	}))
 
 	m.Get("/", func(r render.Render) {
-		r.HTML(200, "home", struct {
-			Gateway string
-		}{
-			*gatewayURL,
-		})
+		r.HTML(200, "index", nil)
 	})
 
 	m.Post("/paste", binding.Form(Paste{}), func(paste Paste, ferr binding.Errors, r render.Render) {
